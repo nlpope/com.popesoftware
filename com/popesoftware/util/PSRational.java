@@ -2,32 +2,49 @@
  * File: PSRational.java
  * ----------------------------
  * The PSRational class is used to represent rational numbers,
- * which are defined to e the quotient of two integers.
+ * which are defined to be the quotient of two integers.
  * 
  * This code was modified from Eric Roberts' text 'The Art & 
  * Science of Java p.201.
  * */
 
 package com.popesoftware.util;
+import java.math.*;
+
 public class PSRational
 {
-	public PSRational(int num,int den)
+	/**
+	 * Adding new private method as instructions prevented
+	 * me from changing the original arguments / return types
+	 * in existing public methods for this class.
+	 * 
+	 * see Eric Roberts' text 'Art & Science of Java' pg.220.
+	 * */
+	private PSRational(BigInteger num, BigInteger den)
 	{
-		if (den == 0) {
-			this.num = num;
-			this.den = 0;
+		if (den == BigInteger.ZERO) {
+			this.num = new BigInteger(num.toString());
+			this.den = BigInteger.ZERO;
 		} else { 
-			int gcd = gcd(Math.abs(num), Math.abs(den));
+			BigInteger gcd = gcd(num.abs(), den.abs());
 			/** @ fail, gcd = 1 */
-			this.num = num / gcd;
-			this.den = Math.abs(den) / gcd;
+			BigInteger numGCDResult = num.divide(gcd);
+			this.num = new BigInteger(numGCDResult.toString());
+			BigInteger denGCDResult = den.abs().divide(gcd);
+			this.den = new BigInteger(denGCDResult.toString());
 			/** accounts for a negative input (negates to positive) */
-			if (den < 0) this.num = -num;
+			if (den.compareTo(BigInteger.ZERO) == -1) this.num = this.num.negate();
 		}
 	}
 	
 	
-	public PSRational(int n)
+	public PSRational(Integer num,Integer den)
+	{
+		this(new BigInteger(num.toString()), new BigInteger(den.toString()));
+	}
+	
+	
+	public PSRational(Integer n)
 	{
 		this(n,1);
 	}
@@ -46,7 +63,14 @@ public class PSRational
 	 * */
 	public PSRational add(PSRational n)
 	{
-		PSRational result = new PSRational(this.num * n.den + this.den * n.num, this.den * n.den);
+		BigInteger biPSRationalNum = new BigInteger(n.num.toString());
+		BigInteger biPSRationalDen = new BigInteger(n.den.toString());
+		PSRational result = new PSRational(
+				this.num.multiply(biPSRationalDen)
+				.add(this.den.multiply(biPSRationalNum))  
+				, this.den.multiply(biPSRationalDen)		
+		);
+		
 		return result;
 	}
 	
@@ -59,7 +83,14 @@ public class PSRational
 	 * */
 	public PSRational subtract(PSRational n)
 	{
-		PSRational result = new PSRational(this.num * n.den - this.den * n.num, this.den * n.den);
+		BigInteger biPSRationalNum = new BigInteger(n.num.toString());
+		BigInteger biPSRationalDen = new BigInteger(n.den.toString());
+		PSRational result = new PSRational(
+				this.num.multiply(biPSRationalDen)
+				.subtract(this.den.multiply(biPSRationalNum))  
+				, this.den.multiply(biPSRationalDen)		
+		);
+		
 		return result;
 	}
 	
@@ -71,19 +102,30 @@ public class PSRational
 	 * */
 	public PSRational multiply(PSRational n)
 	{
-		PSRational result = new PSRational(this.num * n.num, this.den * n.den);
+		BigInteger biPSRationalNum = new BigInteger(n.num.toString());
+		BigInteger biPSRationalDen = new BigInteger(n.den.toString());
+		PSRational result = new PSRational(
+				this.num.multiply(biPSRationalNum),
+				this.den.multiply(biPSRationalDen)
+		);
 		return result;
 	}
 	
 	
 	/**
-	 * Returns the difference of 2 rational numbers using rational arithmetic.
+	 * Returns the quotient of 2 rational numbers using rational arithmetic.
 	 * @param n The rational number you'd like to divide the receiver by
 	 * @return The resulting rational number or integer if the result yields no remainder
 	 * */
 	public PSRational divide(PSRational n)
 	{
-		PSRational result = new PSRational(this.num * n.num, this.den * n.den);
+		BigInteger biPSRationalNum = new BigInteger(n.num.toString());
+		BigInteger biPSRationalDen = new BigInteger(n.den.toString());
+		PSRational result = new PSRational(
+				this.num.multiply(biPSRationalNum),
+				this.den.multiply(biPSRationalDen)
+		);
+		
 		return result;
 	}
 	
@@ -96,13 +138,13 @@ public class PSRational
 	 * @param den The denominator of a rational number
 	 * @return The greatest common divisor of num & den
 	 * */
-	private int gcd(int num, int den)
+	private BigInteger gcd(BigInteger num, BigInteger den)
 	{
-		int r = num % den;
-		while (r != 0) {
+		BigInteger r = num.mod(den);
+		while (r != BigInteger.ZERO) {
 			num = den;
 			den = r;
-			r = num % den;
+			r = num.mod(den);
 		}
 		return den;
 	}
@@ -115,12 +157,12 @@ public class PSRational
 	 * */
 	public String toString()
 	{
-		if (den == 1) { return "" + num; }
-		else if (den == 0) { return "infinity"; }
+		if (den.compareTo(BigInteger.ONE) == 0) return "" + num; 
+		else if (den.compareTo(BigInteger.ZERO) == 0) return "infinity";
 		else { return num + "/" + den; } 
 	}
 	
 	/** Private instance variables */
-	private int num; /** The numerator of this PSRational */
-	private int den; /** The denominator of this PSRational */
+	private BigInteger num; /** The numerator of this PSRational */
+	private BigInteger den; /** The denominator of this PSRational */
 }
