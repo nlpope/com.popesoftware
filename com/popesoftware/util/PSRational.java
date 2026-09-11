@@ -8,6 +8,7 @@
  * Science of Java p.201.
  * */
 
+
 package com.popesoftware.util;
 import java.math.*;
 
@@ -141,7 +142,16 @@ public class PSRational
 	private BigInteger gcd(BigInteger num, BigInteger den)
 	{
 		BigInteger r = num.mod(den);
-		while (r != BigInteger.ZERO) {
+		/**
+		 * 1st comparison version didn't work b/c
+		 * unboxing doesn't work w ==/!= relational 
+		 * operators. It's testing the heap address,
+		 * & since r's heap address always != BigInt
+		 * eger.ZERO's heap address, the loop never
+		 * endes and we end up with a negative r.
+		 * */
+		//while (r != BigInteger.ZERO) {
+		while (r.compareTo(BigInteger.ZERO) != 0){
 			num = den;
 			den = r;
 			r = num.mod(den);

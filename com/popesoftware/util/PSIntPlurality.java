@@ -1,18 +1,18 @@
 /**
- * File: PSPlurality.java
+ * File: PSIntPlurality.java
  * ----------------------------
- * The PSPlurality class converts integers into ordinal 
+ * The PSIntPlurality class converts integers into ordinal 
  * Strings. And back to type Int should storage purposes
  * deem it fitting. 
  * */
 
 package com.popesoftware.util;
 
-public class PSPlurality<T extends Integer> 
+public class PSIntPlurality<T extends Integer> 
 {
 	T numberToChange;
 	
-	public PSPlurality(T numberToChange)
+	public PSIntPlurality(T numberToChange)
 	{
 		this.numberToChange = numberToChange;
 	}
