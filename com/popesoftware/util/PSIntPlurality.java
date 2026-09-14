@@ -20,7 +20,12 @@ public class PSIntPlurality<T extends Integer>
 	
 	public String makeOrdinal()
 	{
+		Integer[] exceptions = {11,12,13};
 		if (numberToChange == 0) return ""; //for this line we must Extend Integer (wrapper for int)
+		for (Integer n : exceptions){
+			if (numberToChange % 100 == n){ return numberToChange + "th"; }
+		}
+		
 		switch (numberToChange % 10){
 		case 1:
 			return numberToChange + "st";
