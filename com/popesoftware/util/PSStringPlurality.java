@@ -10,7 +10,6 @@ package com.popesoftware.util;
 
 public class PSStringPlurality
 {
-	private static final String SENTINEL = "ENDPROGRAM";
 	private static final Character[] lastLetterCases = {'s','x','z'};
 	private static final String[] lastTwoLettersCases = {"ch","sh"};
 	private static final Character[] yPrecendentCases = {'a','e','i','o','u'};
